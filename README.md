@@ -1,28 +1,28 @@
-# bower-json [![Build Status](https://secure.travis-ci.org/bower/json.png?branch=master)](http://travis-ci.org/bower/json) [![Coverage Status](https://coveralls.io/repos/bower/json/badge.svg?branch=master&service=github)](https://coveralls.io/github/bower/json?branch=master)
+# ano-json 
 
-Read `bower.json` files with semantics, normalisation, defaults and validation.
+Read `ano.json` files with semantics, normalisation, defaults and validation.
 
-Install via [npm](https://www.npmjs.org/package/bower-json): `npm install --save bower-json`
+Install via [npm](https://www.npmjs.org/package/ano-json): `npm install --save ano-json`
 
 ## Usage
 
 #### .read(file, options, callback)
 #### .readSync(file, options)
 
-Reads `file` and applies normalisation, defaults and validation according to the `bower.json` spec.
+Reads `file` and applies normalisation, defaults and validation according to the `ano.json` spec.
 If the passed `file` does not exist, the callback is called with `error.code` equal to `ENOENT`.
 If the passed `file` contents are not valid JSON, the callback is called with `error.code` equal to `EMALFORMED`.
-If the `json` does not comply with the `bower.json` spec, the callback is called with `error.code` equal to `EINVALID`.
+If the `json` does not comply with the `ano.json` spec, the callback is called with `error.code` equal to `EINVALID`.
 
 If `file` is a directory, `find()` will be used to search for the json file.
 The `options` argument is optional and can be omitted. These options will be passed to `parse` method.
 
 
 ```js
-var bowerJson = require('bower-json');
+var bowerJson = require('ano-json');
 
 // Can also be used by simply calling bowerJson()
-bowerJson.read('/path/to/bower.json', function (err, json) {
+bowerJson.read('/path/to/ano.json', function (err, json) {
     if (err) {
         console.error('There was an error reading the file');
         console.error(err.message);
@@ -37,7 +37,7 @@ bowerJson.read('/path/to/bower.json', function (err, json) {
 #### .parse(json, options)
 
 Parses an object. Useful when you want to apply normalisation and validation directly to an object.
-If the `json` does not comply with the `bower.json` spec, an error is thrown with `error.code` equal to `EINVALID`.
+If the `json` does not comply with the `ano.json` spec, an error is thrown with `error.code` equal to `EINVALID`.
 
 The `options` arguments is optional and can be omitted. Available options:
 
@@ -47,7 +47,7 @@ The `options` arguments is optional and can be omitted. Available options:
 
 
 ```js
-var bowerJson = require('bower-json');
+var bowerJson = require('ano-json');
 
 var json = {
     name: 'my-package',
@@ -66,10 +66,10 @@ try {
 
 Validates the passed `json` object.
 
-Returns an object with errors and warnings of this bower.json contents.
+Returns an object with errors and warnings of this ano.json contents.
 
 ```js
-var bowerJson = require('bower-json');
+var bowerJson = require('ano-json');
 
 var json = {
     name: 'myPackage',
@@ -91,7 +91,7 @@ Validates the passed `json` object.
 Throws an error with `error.code` equal to `EINVALID` if it does not comply with the spec.
 
 ```js
-var bowerJson = require('bower-json');
+var bowerJson = require('ano-json');
 
 var json = {
     name: 'myPackage',
@@ -109,7 +109,7 @@ try {
 #### .normalize(json)
 
 ```js
-var bowerJson = require('bower-json');
+var bowerJson = require('ano-json');
 
 var json = {
     name: 'my-package',
@@ -126,11 +126,11 @@ json.main // ['foo.js', 'bar.js']
 #### .findSync(folder)
 
 Finds the `json` filename inside a folder.
-Checks if a `bower.json` exists, falling back to `component.json` (deprecated) and `.bower.json`.
+Checks if a `ano.json` exists, falling back to `library.json` (deprecated) and `.ano.json`.
 If no file was found, the callback is called with a `error.code` of `ENOENT`.
 
 ```js
-var bowerJson = require('bower-json');
+var bowerJson = require('ano-json');
 
 bowerJson.find('/path/to/folder', function (err, filename) {
     if (err) {

@@ -1,10 +1,10 @@
 {
-  "name": "bower-json",
+  "name": "ano-json",
   "version": "0.8.1",
-  "description": "Read bower.json files with semantics, normalisation, defaults and validation",
+  "description": "Read ano.json files with semantics, normalisation, defaults and validation",
   "author": "Twitter",
   "license": "MIT",
-  "repository": "bower/json",
+  "repository": "taoyuan/ano-json",
   "main": "lib/json",
   "engines": {
     "node": ">=0.10.0"
