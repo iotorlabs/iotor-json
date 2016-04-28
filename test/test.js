@@ -27,14 +27,6 @@ describe('.find', function () {
     });
   });
 
-  it('should not fallback to the library.json file if it\'s a library(1) file', function (done) {
-    bowerJson.find(__dirname + '/pkg-library(1)-json', function (err) {
-      expect(err).to.be.an(Error);
-      expect(err.code).to.equal('ENOENT');
-      expect(err.message).to.equal('None of ano.json, library.json, .ano.json were found in ' + __dirname + '/pkg-library(1)-json');
-      done();
-    });
-  });
 
   it('should fallback to the .ano.json file', function (done) {
     bowerJson.find(__dirname + '/pkg-dot-ano-json', function (err, file) {
@@ -47,11 +39,22 @@ describe('.find', function () {
     });
   });
 
-  it('should error if no library.json / ano.json / .ano.json is found', function (done) {
+  it('should fallback to the library.properties file', function (done) {
+    bowerJson.find(__dirname + '/pkg-library-properties', function (err, file) {
+      if (err) {
+        return done(err);
+      }
+
+      expect(file).to.equal(path.resolve(__dirname + '/pkg-library-properties/library.properties'));
+      done();
+    });
+  });
+
+  it('should error if no ano.json / .ano.json / library.json / library.properties is found', function (done) {
     bowerJson.find(__dirname, function (err) {
       expect(err).to.be.an(Error);
       expect(err.code).to.equal('ENOENT');
-      expect(err.message).to.equal('None of ano.json, library.json, .ano.json were found in ' + __dirname);
+      expect(err.message).to.equal('None of ano.json, .ano.json, library.json, library.properties were found in ' + __dirname);
       done();
     });
   });
@@ -84,7 +87,7 @@ describe('.findSync', function () {
     var err = bowerJson.findSync(__dirname);
     expect(err).to.be.an(Error);
     expect(err.code).to.equal('ENOENT');
-    expect(err.message).to.equal('None of ano.json, library.json, .ano.json were found in ' + __dirname);
+    expect(err.message).to.equal('None of ano.json, .ano.json, library.json, library.properties were found in ' + __dirname);
     done();
   });
 
@@ -179,6 +182,28 @@ describe('.read', function () {
       });
     });
   });
+
+  it('should find for a properties file if a directory is given', function (done) {
+    bowerJson.read(__dirname + '/pkg-library-properties', function (err, json, file) {
+      if (err) {
+        return done(err);
+      }
+
+      expect(json).to.be.an('object');
+      expect(json.name).to.equal('some-pkg');
+      expect(json.version).to.equal('0.0.0');
+      expect(file).to.equal(path.resolve(__dirname + '/pkg-library-properties/library.properties'));
+      done();
+    });
+  });
+
+  it('should give error if no .json files in strict mode', function (done) {
+    bowerJson.read(__dirname + '/pkg-library-properties', {strict: true}, function (err) {
+      expect(err).to.be.an(Error);
+      expect(err.code).to.equal('ENOENT');
+      done();
+    });
+  });
 });
 
 describe('.readSync', function () {
@@ -237,6 +262,24 @@ describe('.readSync', function () {
     done();
   });
 
+
+  it('should find for a properties file if a directory is given', function (done) {
+    var json = bowerJson.readSync(__dirname + '/pkg-library-properties');
+
+    expect(json).to.be.an('object');
+    expect(json.name).to.equal('some-pkg');
+    expect(json.version).to.equal('0.0.0');
+    done();
+  });
+
+
+  it('should give error if no .json files in strict mode', function (done) {
+    var err = bowerJson.readSync(__dirname + '/pkg-library-properties', {strict: true});
+    expect(err).to.be.an(Error);
+    expect(err.code).to.equal('ENOENT');
+    expect(err.file).to.undefined;
+    done();
+  });
 
 });
 
