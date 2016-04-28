@@ -164,20 +164,20 @@ describe('.read', function () {
     });
   });
 
-  it('should normalize the returned object if normalize is true', function (done) {
-    bowerJson.read(__dirname + '/pkg-ano-json/ano.json', function (err, json) {
+  it('should normalize the returned object by default', function (done) {
+    bowerJson.read(__dirname + '/pkg-ano-json-2/ano.json', function (err, json) {
       if (err) {
         return done(err);
       }
 
-      expect(json.main).to.equal('foo.js');
+      expect(json.name).to.equal('Some_Library');
 
-      bowerJson.read(__dirname + '/pkg-ano-json/ano.json', {normalize: true}, function (err, json) {
+      bowerJson.read(__dirname + '/pkg-ano-json-2/ano.json', {normalize: false}, function (err, json) {
         if (err) {
           return done(err);
         }
 
-        expect(json.main).to.eql(['foo.js']);
+        expect(json.name).to.eql('Some Library');
         done();
       });
     });
@@ -252,13 +252,13 @@ describe('.readSync', function () {
     done();
   });
 
-  it('should normalize the returned object if normalize is true', function (done) {
-    var json = bowerJson.readSync(__dirname + '/pkg-ano-json/ano.json');
-    expect(json.main).to.equal('foo.js');
+  it('should not normalize the returned object if normalize is false', function (done) {
+    var json = bowerJson.readSync(__dirname + '/pkg-ano-json-2/ano.json');
+    expect(json.name).to.equal('Some_Library');
 
-    json = bowerJson.readSync(__dirname + '/pkg-ano-json/ano.json', {normalize: true});
+    json = bowerJson.readSync(__dirname + '/pkg-ano-json-2/ano.json', {normalize: false});
 
-    expect(json.main).to.eql(['foo.js']);
+    expect(json.name).to.eql('Some Library');
     done();
   });
 
@@ -302,14 +302,15 @@ describe('.parse', function () {
     }).to.not.throwException();
   });
 
-  it('should not normalize the passed object unless normalize is true', function () {
-    var json = {name: 'foo', main: 'foo.js'};
+  it('should not normalize the passed object if normalize is false', function () {
+    var json = {name: 'foo bar', main: 'foo.js'};
+
+    bowerJson.parse(json, {normalize: false});
+    expect(json.name).to.eql('foo bar');
 
     bowerJson.parse(json);
-    expect(json.main).to.eql('foo.js');
+    expect(json.name).to.eql('foo_bar');
 
-    bowerJson.parse(json, {normalize: true});
-    expect(json.main).to.eql(['foo.js']);
   });
 });
 
@@ -471,10 +472,10 @@ describe('.validate', function () {
 
 describe('.normalize', function () {
   it('should normalize the main property', function () {
-    var json = {name: 'foo', main: 'foo.js'};
+    var json = {name: 'foo bar', main: 'foo.js'};
 
     bowerJson.normalize(json);
-    expect(json.main).to.eql(['foo.js']);
+    expect(json.name).to.eql('foo_bar');
   });
 });
 
