@@ -119,7 +119,7 @@ describe('.read', function () {
       }
 
       expect(json).to.be.an('object');
-      expect(json.name).to.equal('some-pkg');
+      expect(json.name).to.equal('SomeLibrary');
       expect(json.version).to.equal('0.0.0');
 
       done();
@@ -145,7 +145,7 @@ describe('.read', function () {
       }
 
       expect(json).to.be.an('object');
-      expect(json.name).to.equal('some-pkg');
+      expect(json.name).to.equal('SomeLibrary');
       expect(json.version).to.equal('0.0.0');
       expect(file).to.equal(path.resolve(__dirname + '/pkg-library-json/library.json'));
       done();
@@ -190,7 +190,7 @@ describe('.read', function () {
       }
 
       expect(json).to.be.an('object');
-      expect(json.name).to.equal('some-pkg');
+      expect(json.name).to.equal('SomeLibrary');
       expect(json.version).to.equal('0.0.0');
       expect(file).to.equal(path.resolve(__dirname + '/pkg-library-properties/library.properties'));
       done();
@@ -226,7 +226,7 @@ describe('.readSync', function () {
     var json = bowerJson.readSync(__dirname + '/pkg-ano-json/ano.json');
 
     expect(json).to.be.an('object');
-    expect(json.name).to.equal('some-pkg');
+    expect(json.name).to.equal('SomeLibrary');
     expect(json.version).to.equal('0.0.0');
 
     done();
@@ -236,7 +236,7 @@ describe('.readSync', function () {
     var json = bowerJson.readSync(__dirname + '/pkg-library-json');
 
     expect(json).to.be.an('object');
-    expect(json.name).to.equal('some-pkg');
+    expect(json.name).to.equal('SomeLibrary');
     expect(json.version).to.equal('0.0.0');
     done();
   });
@@ -267,7 +267,7 @@ describe('.readSync', function () {
     var json = bowerJson.readSync(__dirname + '/pkg-library-properties');
 
     expect(json).to.be.an('object');
-    expect(json.name).to.equal('some-pkg');
+    expect(json.name).to.equal('SomeLibrary');
     expect(json.version).to.equal('0.0.0');
     done();
   });
@@ -325,14 +325,6 @@ describe('.getIssues', function () {
 
     expect(bowerJson.getIssues(json).warnings).to.contain(
       'The "name" is too long, the limit is 50 characters'
-    );
-  });
-
-  it('should validate the name is lowercase', function () {
-    var json = {name: 'gruNt'};
-
-    expect(bowerJson.getIssues(json).warnings).to.contain(
-      'The "name" is recommended to be lowercase, can contain digits, dots, dashes'
     );
   });
 
