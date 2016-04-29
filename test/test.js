@@ -1,23 +1,23 @@
 var path = require('path');
 var expect = require('expect.js');
 var _s = require('underscore.string');
-var bowerJson = require('../lib/json');
+var libraryJson = require('../lib/json');
 var request = require('request');
 
 describe('.find', function () {
-  it('should find the ano.json file', function (done) {
-    bowerJson.find(__dirname + '/pkg-ano-json', function (err, file) {
+  it('should find the library.json file', function (done) {
+    libraryJson.find(__dirname + '/pkg-library-json', function (err, file) {
       if (err) {
         return done(err);
       }
 
-      expect(file).to.equal(path.resolve(__dirname + '/pkg-ano-json/ano.json'));
+      expect(file).to.equal(path.resolve(__dirname + '/pkg-library-json/library.json'));
       done();
     });
   });
 
   it('should fallback to the library.json file', function (done) {
-    bowerJson.find(__dirname + '/pkg-library-json', function (err, file) {
+    libraryJson.find(__dirname + '/pkg-library-json', function (err, file) {
       if (err) {
         return done(err);
       }
@@ -28,19 +28,19 @@ describe('.find', function () {
   });
 
 
-  it('should fallback to the .ano.json file', function (done) {
-    bowerJson.find(__dirname + '/pkg-dot-ano-json', function (err, file) {
+  it('should fallback to the .library.json file', function (done) {
+    libraryJson.find(__dirname + '/pkg-dot-library-json', function (err, file) {
       if (err) {
         return done(err);
       }
 
-      expect(file).to.equal(path.resolve(__dirname + '/pkg-dot-ano-json/.ano.json'));
+      expect(file).to.equal(path.resolve(__dirname + '/pkg-dot-library-json/.library.json'));
       done();
     });
   });
 
   it('should fallback to the library.properties file', function (done) {
-    bowerJson.find(__dirname + '/pkg-library-properties', function (err, file) {
+    libraryJson.find(__dirname + '/pkg-library-properties', function (err, file) {
       if (err) {
         return done(err);
       }
@@ -50,11 +50,11 @@ describe('.find', function () {
     });
   });
 
-  it('should error if no ano.json / .ano.json / library.json / library.properties is found', function (done) {
-    bowerJson.find(__dirname, function (err) {
+  it('should error if no library.json / library.properties / .library.json  is found', function (done) {
+    libraryJson.find(__dirname, function (err) {
       expect(err).to.be.an(Error);
       expect(err.code).to.equal('ENOENT');
-      expect(err.message).to.equal('None of ano.json, .ano.json, library.json, library.properties were found in ' + __dirname);
+      expect(err.message).to.equal('None of ' + libraryJson.POSSIBLES.join(', ') + ' were found in ' + __dirname);
       done();
     });
   });
@@ -62,32 +62,32 @@ describe('.find', function () {
 
 describe('.findSync', function () {
 
-  it('should find the ano.json file', function (done) {
-    var file = bowerJson.findSync(__dirname + '/pkg-ano-json');
-
-    expect(file).to.equal(path.resolve(__dirname + '/pkg-ano-json/ano.json'));
-    done();
-  });
-
-  it('should fallback to the library.json file', function (done) {
-    var file = bowerJson.findSync(__dirname + '/pkg-library-json');
+  it('should find the library.json file', function (done) {
+    var file = libraryJson.findSync(__dirname + '/pkg-library-json');
 
     expect(file).to.equal(path.resolve(__dirname + '/pkg-library-json/library.json'));
     done();
   });
 
-  it('should fallback to the .ano.json file', function (done) {
-    var file = bowerJson.findSync(__dirname + '/pkg-dot-ano-json');
+  it('should fallback to the library.json file', function (done) {
+    var file = libraryJson.findSync(__dirname + '/pkg-library-json');
 
-    expect(file).to.equal(path.resolve(__dirname + '/pkg-dot-ano-json/.ano.json'));
+    expect(file).to.equal(path.resolve(__dirname + '/pkg-library-json/library.json'));
     done();
   });
 
-  it('should error if no library.json / ano.json / .ano.json is found', function (done) {
-    var err = bowerJson.findSync(__dirname);
+  it('should fallback to the .library.json file', function (done) {
+    var file = libraryJson.findSync(__dirname + '/pkg-dot-library-json');
+
+    expect(file).to.equal(path.resolve(__dirname + '/pkg-dot-library-json/.library.json'));
+    done();
+  });
+
+  it('should error if no library.json / library.json / .library.json is found', function (done) {
+    var err = libraryJson.findSync(__dirname);
     expect(err).to.be.an(Error);
     expect(err.code).to.equal('ENOENT');
-    expect(err.message).to.equal('None of ano.json, .ano.json, library.json, library.properties were found in ' + __dirname);
+    expect(err.message).to.equal('None of ' + libraryJson.POSSIBLES.join(', ') + ' were found in ' + __dirname);
     done();
   });
 
@@ -96,7 +96,7 @@ describe('.findSync', function () {
 
 describe('.read', function () {
   it('should give error if file does not exists', function (done) {
-    bowerJson.read(__dirname + '/willneverexist', function (err) {
+    libraryJson.read(__dirname + '/willneverexist', function (err) {
       expect(err).to.be.an(Error);
       expect(err.code).to.equal('ENOENT');
       done();
@@ -104,16 +104,16 @@ describe('.read', function () {
   });
 
   it('should give error if when reading an invalid json', function (done) {
-    bowerJson.read(__dirname + '/pkg-ano-json-malformed/ano.json', function (err) {
+    libraryJson.read(__dirname + '/pkg-library-json-malformed/library.json', function (err) {
       expect(err).to.be.an(Error);
       expect(err.code).to.equal('EMALFORMED');
-      expect(err.file).to.equal(path.resolve(__dirname + '/pkg-ano-json-malformed/ano.json'));
+      expect(err.file).to.equal(path.resolve(__dirname + '/pkg-library-json-malformed/library.json'));
       done();
     });
   });
 
   it('should read the file and give an object', function (done) {
-    bowerJson.read(__dirname + '/pkg-ano-json/ano.json', function (err, json) {
+    libraryJson.read(__dirname + '/pkg-library-json/library.json', function (err, json) {
       if (err) {
         return done(err);
       }
@@ -127,19 +127,19 @@ describe('.read', function () {
   });
 
   it('should give the json file that was read', function (done) {
-    bowerJson.read(__dirname + '/pkg-ano-json', function (err, json, file) {
+    libraryJson.read(__dirname + '/pkg-library-json', function (err, json, file) {
       if (err) {
         return done(err);
       }
 
 
-      expect(file).to.equal(__dirname + '/pkg-ano-json/ano.json');
+      expect(file).to.equal(__dirname + '/pkg-library-json/library.json');
       done();
     });
   });
 
   it('should find for a json file if a directory is given', function (done) {
-    bowerJson.read(__dirname + '/pkg-library-json', function (err, json, file) {
+    libraryJson.read(__dirname + '/pkg-library-json', function (err, json, file) {
       if (err) {
         return done(err);
       }
@@ -153,26 +153,26 @@ describe('.read', function () {
   });
 
   it('should validate the returned object unless validate is false', function (done) {
-    bowerJson.read(__dirname + '/pkg-ano-json-invalid/ano.json', function (err) {
+    libraryJson.read(__dirname + '/pkg-library-json-invalid/library.json', function (err) {
       expect(err).to.be.an(Error);
       expect(err.message).to.contain('name');
-      expect(err.file).to.equal(path.resolve(__dirname + '/pkg-ano-json-invalid/ano.json'));
+      expect(err.file).to.equal(path.resolve(__dirname + '/pkg-library-json-invalid/library.json'));
 
-      bowerJson.read(__dirname + '/pkg-ano-json-invalid/ano.json', {validate: false}, function (err) {
+      libraryJson.read(__dirname + '/pkg-library-json-invalid/library.json', {validate: false}, function (err) {
         done(err);
       });
     });
   });
 
   it('should normalize the returned object by default', function (done) {
-    bowerJson.read(__dirname + '/pkg-ano-json-2/ano.json', function (err, json) {
+    libraryJson.read(__dirname + '/pkg-library-json-2/library.json', function (err, json) {
       if (err) {
         return done(err);
       }
 
       expect(json.name).to.equal('Some_Library');
 
-      bowerJson.read(__dirname + '/pkg-ano-json-2/ano.json', {normalize: false}, function (err, json) {
+      libraryJson.read(__dirname + '/pkg-library-json-2/library.json', {normalize: false}, function (err, json) {
         if (err) {
           return done(err);
         }
@@ -184,7 +184,7 @@ describe('.read', function () {
   });
 
   it('should find for a properties file if a directory is given', function (done) {
-    bowerJson.read(__dirname + '/pkg-library-properties', function (err, json, file) {
+    libraryJson.read(__dirname + '/pkg-library-properties', function (err, json, file) {
       if (err) {
         return done(err);
       }
@@ -197,33 +197,26 @@ describe('.read', function () {
     });
   });
 
-  it('should give error if no .json files in strict mode', function (done) {
-    bowerJson.read(__dirname + '/pkg-library-properties', {strict: true}, function (err) {
-      expect(err).to.be.an(Error);
-      expect(err.code).to.equal('ENOENT');
-      done();
-    });
-  });
 });
 
 describe('.readSync', function () {
   it('should give error if file does not exists', function (done) {
-    var err = bowerJson.readSync(__dirname + '/willneverexist');
+    var err = libraryJson.readSync(__dirname + '/willneverexist');
     expect(err).to.be.an(Error);
     expect(err.code).to.equal('ENOENT');
     done();
   });
 
   it('should give error if when reading an invalid json', function (done) {
-    var err = bowerJson.readSync(__dirname + '/pkg-ano-json-malformed/ano.json');
+    var err = libraryJson.readSync(__dirname + '/pkg-library-json-malformed/library.json');
     expect(err).to.be.an(Error);
     expect(err.code).to.equal('EMALFORMED');
-    expect(err.file).to.equal(path.resolve(__dirname + '/pkg-ano-json-malformed/ano.json'));
+    expect(err.file).to.equal(path.resolve(__dirname + '/pkg-library-json-malformed/library.json'));
     done();
   });
 
   it('should read the file and give an object', function (done) {
-    var json = bowerJson.readSync(__dirname + '/pkg-ano-json/ano.json');
+    var json = libraryJson.readSync(__dirname + '/pkg-library-json/library.json');
 
     expect(json).to.be.an('object');
     expect(json.name).to.equal('SomeLibrary');
@@ -233,7 +226,7 @@ describe('.readSync', function () {
   });
 
   it('should find for a json file if a directory is given', function (done) {
-    var json = bowerJson.readSync(__dirname + '/pkg-library-json');
+    var json = libraryJson.readSync(__dirname + '/pkg-library-json');
 
     expect(json).to.be.an('object');
     expect(json.name).to.equal('SomeLibrary');
@@ -242,21 +235,21 @@ describe('.readSync', function () {
   });
 
   it('should validate the returned object unless validate is false', function (done) {
-    var err = bowerJson.readSync(__dirname + '/pkg-ano-json-invalid/ano.json');
+    var err = libraryJson.readSync(__dirname + '/pkg-library-json-invalid/library.json');
     expect(err).to.be.an(Error);
     expect(err.message).to.contain('name');
-    expect(err.file).to.equal(path.resolve(__dirname + '/pkg-ano-json-invalid/ano.json'));
+    expect(err.file).to.equal(path.resolve(__dirname + '/pkg-library-json-invalid/library.json'));
 
-    err = bowerJson.readSync(__dirname + '/pkg-ano-json-invalid/ano.json', {validate: false});
+    err = libraryJson.readSync(__dirname + '/pkg-library-json-invalid/library.json', {validate: false});
     expect(err).to.not.be.an(Error);
     done();
   });
 
   it('should not normalize the returned object if normalize is false', function (done) {
-    var json = bowerJson.readSync(__dirname + '/pkg-ano-json-2/ano.json');
+    var json = libraryJson.readSync(__dirname + '/pkg-library-json-2/library.json');
     expect(json.name).to.equal('Some_Library');
 
-    json = bowerJson.readSync(__dirname + '/pkg-ano-json-2/ano.json', {normalize: false});
+    json = libraryJson.readSync(__dirname + '/pkg-library-json-2/library.json', {normalize: false});
 
     expect(json.name).to.eql('Some Library');
     done();
@@ -264,20 +257,11 @@ describe('.readSync', function () {
 
 
   it('should find for a properties file if a directory is given', function (done) {
-    var json = bowerJson.readSync(__dirname + '/pkg-library-properties');
+    var json = libraryJson.readSync(__dirname + '/pkg-library-properties');
 
     expect(json).to.be.an('object');
     expect(json.name).to.equal('SomeLibrary');
     expect(json.version).to.equal('0.0.0');
-    done();
-  });
-
-
-  it('should give error if no .json files in strict mode', function (done) {
-    var err = bowerJson.readSync(__dirname + '/pkg-library-properties', {strict: true});
-    expect(err).to.be.an(Error);
-    expect(err.code).to.equal('ENOENT');
-    expect(err.file).to.undefined;
     done();
   });
 
@@ -287,28 +271,28 @@ describe('.parse', function () {
   it('should return the same object, unless clone is true', function () {
     var json = {name: 'foo'};
 
-    expect(bowerJson.parse(json)).to.equal(json);
-    expect(bowerJson.parse(json, {clone: true})).to.not.equal(json);
-    expect(bowerJson.parse(json, {clone: true})).to.eql(json);
+    expect(libraryJson.parse(json)).to.equal(json);
+    expect(libraryJson.parse(json, {clone: true})).to.not.equal(json);
+    expect(libraryJson.parse(json, {clone: true})).to.eql(json);
   });
 
   it('should validate the passed object, unless validate is false', function () {
     expect(function () {
-      bowerJson.parse({});
+      libraryJson.parse({});
     }).to.throwException(/name/);
 
     expect(function () {
-      bowerJson.parse({}, {validate: false});
+      libraryJson.parse({}, {validate: false});
     }).to.not.throwException();
   });
 
   it('should not normalize the passed object if normalize is false', function () {
     var json = {name: 'foo bar', main: 'foo.js'};
 
-    bowerJson.parse(json, {normalize: false});
+    libraryJson.parse(json, {normalize: false});
     expect(json.name).to.eql('foo bar');
 
-    bowerJson.parse(json);
+    libraryJson.parse(json);
     expect(json.name).to.eql('foo_bar');
 
   });
@@ -318,13 +302,13 @@ describe('.getIssues', function () {
   it('should print no errors even for weird package names', function () {
     var json = {name: '@gruNt/my dependency'};
 
-    expect(bowerJson.getIssues(json).errors).to.be.empty();
+    expect(libraryJson.getIssues(json).errors).to.be.empty();
   });
 
   it('should validate the name length', function () {
     var json = {name: 'a_123456789_123456789_123456789_123456789_123456789_z'};
 
-    expect(bowerJson.getIssues(json).warnings).to.contain(
+    expect(libraryJson.getIssues(json).warnings).to.contain(
       'The "name" is too long, the limit is 50 characters'
     );
   });
@@ -332,7 +316,7 @@ describe('.getIssues', function () {
   it('should validate the name starts with lowercase', function () {
     var json = {name: '-runt'};
 
-    expect(bowerJson.getIssues(json).warnings).to.contain(
+    expect(libraryJson.getIssues(json).warnings).to.contain(
       'The "name" cannot start with dot or dash'
     );
   });
@@ -340,7 +324,7 @@ describe('.getIssues', function () {
   it('should validate the name starts with lowercase', function () {
     var json = {name: '.grunt'};
 
-    expect(bowerJson.getIssues(json).warnings).to.contain(
+    expect(libraryJson.getIssues(json).warnings).to.contain(
       'The "name" cannot start with dot or dash'
     );
   });
@@ -348,7 +332,7 @@ describe('.getIssues', function () {
   it('should validate the name ends with lowercase', function () {
     var json = {name: 'grun-'};
 
-    expect(bowerJson.getIssues(json).warnings).to.contain(
+    expect(libraryJson.getIssues(json).warnings).to.contain(
       'The "name" cannot end with dot or dash'
     );
   });
@@ -356,7 +340,7 @@ describe('.getIssues', function () {
   it('should validate the name ends with lowercase', function () {
     var json = {name: 'grun.'};
 
-    expect(bowerJson.getIssues(json).warnings).to.contain(
+    expect(libraryJson.getIssues(json).warnings).to.contain(
       'The "name" cannot end with dot or dash'
     );
   });
@@ -364,7 +348,7 @@ describe('.getIssues', function () {
   it('should validate the name is valid', function () {
     var json = {name: 'gru.n-t'};
 
-    expect(bowerJson.getIssues(json).warnings).to.eql([]);
+    expect(libraryJson.getIssues(json).warnings).to.eql([]);
   });
 
   it('should validate the description length', function () {
@@ -373,7 +357,7 @@ describe('.getIssues', function () {
       description: _s.repeat('æ', 141)
     };
 
-    expect(bowerJson.getIssues(json).warnings).to.contain(
+    expect(libraryJson.getIssues(json).warnings).to.contain(
       'The "description" is too long, the limit is 140 characters'
     );
   });
@@ -384,7 +368,7 @@ describe('.getIssues', function () {
       description: _s.repeat('æ', 140)
     };
 
-    expect(bowerJson.getIssues(json).warnings).to.eql([]);
+    expect(libraryJson.getIssues(json).warnings).to.eql([]);
   });
 
   it('should validate that main does not contain globs', function () {
@@ -393,7 +377,7 @@ describe('.getIssues', function () {
       main: ['js/*.js']
     };
 
-    expect(bowerJson.getIssues(json).warnings).to.contain(
+    expect(libraryJson.getIssues(json).warnings).to.contain(
       'The "main" field cannot contain globs (example: "*.js")'
     );
   });
@@ -404,7 +388,7 @@ describe('.getIssues', function () {
       main: ['foo.min.css']
     };
 
-    expect(bowerJson.getIssues(json).warnings).to.contain(
+    expect(libraryJson.getIssues(json).warnings).to.contain(
       'The "main" field cannot contain minified files'
     );
   });
@@ -415,7 +399,7 @@ describe('.getIssues', function () {
       main: ['foo.woff']
     };
 
-    expect(bowerJson.getIssues(json).warnings).to.contain(
+    expect(libraryJson.getIssues(json).warnings).to.contain(
       'The "main" field cannot contain font, image, audio, or video files'
     );
   });
@@ -426,7 +410,7 @@ describe('.getIssues', function () {
       main: ['foo.png']
     };
 
-    expect(bowerJson.getIssues(json).warnings).to.contain(
+    expect(libraryJson.getIssues(json).warnings).to.contain(
       'The "main" field cannot contain font, image, audio, or video files'
     );
   });
@@ -437,7 +421,7 @@ describe('.getIssues', function () {
       main: ['foo.js', 'bar.js']
     };
 
-    expect(bowerJson.getIssues(json).warnings).to.contain(
+    expect(libraryJson.getIssues(json).warnings).to.contain(
       'The "main" field has to contain only 1 file per filetype; found multiple .js files: ["foo.js","bar.js"]'
     );
   });
@@ -446,7 +430,7 @@ describe('.getIssues', function () {
 describe('.validate', function () {
   it('should validate the name property', function () {
     expect(function () {
-      bowerJson.validate({});
+      libraryJson.validate({});
     }).to.throwException(/name/);
   });
 
@@ -456,7 +440,7 @@ describe('.validate', function () {
       main: {}
     };
     expect(function () {
-      bowerJson.validate(json);
+      libraryJson.validate(json);
     }).to.throwException();
   });
   it('should validate the type of items of an Array main', function () {
@@ -465,7 +449,7 @@ describe('.validate', function () {
       main: [{}]
     };
     expect(function () {
-      bowerJson.validate(json);
+      libraryJson.validate(json);
     }).to.throwException();
   });
 });
@@ -474,7 +458,7 @@ describe('.normalize', function () {
   it('should normalize the main property', function () {
     var json = {name: 'foo bar', main: 'foo.js'};
 
-    bowerJson.normalize(json);
+    libraryJson.normalize(json);
     expect(json.name).to.eql('foo_bar');
   });
 });
@@ -513,7 +497,7 @@ describe.skip('packages from ano registry', function () {
 
     packageList.forEach(function (package) {
       try {
-        bowerJson.validate(package);
+        libraryJson.validate(package);
       } catch (e) {
         invalidPackageCount++;
         console.error('validation of "' + package.name + '" failed: ' + e.message);
