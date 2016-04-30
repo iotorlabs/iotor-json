@@ -1,10 +1,10 @@
 {
-  "name": "racoon-json",
+  "name": "iotor-json",
   "version": "1.2.0",
   "description": "Read library.json files with semantics, normalisation, defaults and validation",
   "author": "Twitter",
   "license": "MIT",
-  "repository": "racoonio/racoon-json",
+  "repository": "iotorlabs/iotor-json",
   "main": "lib/json",
   "engines": {
     "node": ">=0.10.0"

@@ -463,10 +463,10 @@ describe('.normalize', function () {
   });
 });
 
-describe.skip('libraries from racoon registry', function () {
+describe.skip('libraries from iotor registry', function () {
 
   var packageList,
-    packageListUrl = 'http://racoonio.herokuapp.com/libraries';
+    packageListUrl = 'http://iotor.herokuapp.com/libraries';
 
   this.timeout(60000);
 
