@@ -1,28 +1,28 @@
-# ano-json 
+# racoon-json 
 
-Read `ano.json` files with semantics, normalisation, defaults and validation.
+Read `racoon.json` files with semantics, normalisation, defaults and validation.
 
-Install via [npm](https://www.npmjs.org/package/ano-json): `npm install --save ano-json`
+Install via [npm](https://www.npmjs.org/package/racoon-json): `npm install --save racoon-json`
 
 ## Usage
 
 #### .read(file, options, callback)
 #### .readSync(file, options)
 
-Reads `file` and applies normalisation, defaults and validation according to the `ano.json` spec.
+Reads `file` and applies normalisation, defaults and validation according to the `racoon.json` spec.
 If the passed `file` does not exist, the callback is called with `error.code` equal to `ENOENT`.
 If the passed `file` contents are not valid JSON, the callback is called with `error.code` equal to `EMALFORMED`.
-If the `json` does not comply with the `ano.json` spec, the callback is called with `error.code` equal to `EINVALID`.
+If the `json` does not comply with the `racoon.json` spec, the callback is called with `error.code` equal to `EINVALID`.
 
 If `file` is a directory, `find()` will be used to search for the json file.
 The `options` argument is optional and can be omitted. These options will be passed to `parse` method.
 
 
 ```js
-var bowerJson = require('ano-json');
+var racoonJon = require('racoon-json');
 
-// Can also be used by simply calling bowerJson()
-bowerJson.read('/path/to/ano.json', function (err, json) {
+// Can also be used by simply calling racoonJon()
+racoonJon.read('/path/to/racoon.json', function (err, json) {
     if (err) {
         console.error('There was an error reading the file');
         console.error(err.message);
@@ -37,7 +37,7 @@ bowerJson.read('/path/to/ano.json', function (err, json) {
 #### .parse(json, options)
 
 Parses an object. Useful when you want to apply normalisation and validation directly to an object.
-If the `json` does not comply with the `ano.json` spec, an error is thrown with `error.code` equal to `EINVALID`.
+If the `json` does not comply with the `racoon.json` spec, an error is thrown with `error.code` equal to `EINVALID`.
 
 The `options` arguments is optional and can be omitted. Available options:
 
@@ -47,7 +47,7 @@ The `options` arguments is optional and can be omitted. Available options:
 
 
 ```js
-var bowerJson = require('ano-json');
+var racoonJon = require('racoon-json');
 
 var json = {
     name: 'my-package',
@@ -55,7 +55,7 @@ var json = {
 };
 
 try {
-    bowerJson.parse(json);
+    racoonJon.parse(json);
 } catch (err) {
     console.error('There was an error parsing the object');
     console.error(err.message);
@@ -66,10 +66,10 @@ try {
 
 Validates the passed `json` object.
 
-Returns an object with errors and warnings of this ano.json contents.
+Returns an object with errors and warnings of this racoon.json contents.
 
 ```js
-var bowerJson = require('ano-json');
+var racoonJon = require('racoon-json');
 
 var json = {
     name: 'myPackage',
@@ -77,7 +77,7 @@ var json = {
     main: {}
 };
 
-var issues = bowerJson.getIssues(json);
+var issues = racoonJon.getIssues(json);
 
 expect(issues).toEqual({
   errors: ['The "main" field has to be either an Array or a String'],
@@ -91,7 +91,7 @@ Validates the passed `json` object.
 Throws an error with `error.code` equal to `EINVALID` if it does not comply with the spec.
 
 ```js
-var bowerJson = require('ano-json');
+var racoonJon = require('racoon-json');
 
 var json = {
     name: 'myPackage',
@@ -99,7 +99,7 @@ var json = {
 };
 
 try {
-    bowerJson.validate(json);
+    racoonJon.validate(json);
 } catch (err) {
     console.error('There was an error validating the object');
     console.error(err.message);
@@ -109,7 +109,7 @@ try {
 #### .normalize(json)
 
 ```js
-var bowerJson = require('ano-json');
+var racoonJon = require('racoon-json');
 
 var json = {
     name: 'my-package',
@@ -117,7 +117,7 @@ var json = {
     main: 'foo.js,bar.js'
 };
 
-bowerJson.normalize(json);
+racoonJon.normalize(json);
 json.main // ['foo.js', 'bar.js']
 ```
 
@@ -126,13 +126,13 @@ json.main // ['foo.js', 'bar.js']
 #### .findSync(folder)
 
 Finds the `json` filename inside a folder.
-Checks if a `ano.json` exists, falling back to `library.json` (deprecated) and `.ano.json`.
+Checks if a `racoon.json` exists, falling back to `library.json` (deprecated) and `.racoon.json`.
 If no file was found, the callback is called with a `error.code` of `ENOENT`.
 
 ```js
-var bowerJson = require('ano-json');
+var racoonJon = require('racoon-json');
 
-bowerJson.find('/path/to/folder', function (err, filename) {
+racoonJon.find('/path/to/folder', function (err, filename) {
     if (err) {
         console.error('There is no json file in the folder');
         return;
@@ -141,7 +141,7 @@ bowerJson.find('/path/to/folder', function (err, filename) {
     console.log('Filename: ', filename);
 
     // Now that we got the filename, we can read its contents
-    bowerJson.read(filename, function (err, json) {
+    racoonJon.read(filename, function (err, json) {
         if (err) {
             console.error('There was an error reading the file');
             console.error(err.message);

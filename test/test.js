@@ -463,10 +463,10 @@ describe('.normalize', function () {
   });
 });
 
-describe.skip('packages from ano registry', function () {
+describe.skip('libraries from racoon registry', function () {
 
   var packageList,
-    packageListUrl = 'http://ano.herokuapp.com/packages';
+    packageListUrl = 'http://racoonio.herokuapp.com/libraries';
 
   this.timeout(60000);
 

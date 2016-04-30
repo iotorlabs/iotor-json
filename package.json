@@ -1,10 +1,10 @@
 {
-  "name": "ano-json",
-  "version": "1.0.1",
-  "description": "Read ano.json files with semantics, normalisation, defaults and validation",
+  "name": "racoon-json",
+  "version": "1.1.0",
+  "description": "Read racoon.json files with semantics, normalisation, defaults and validation",
   "author": "Twitter",
   "license": "MIT",
-  "repository": "taoyuan/ano-json",
+  "repository": "racoonio/racoon-json",
   "main": "lib/json",
   "engines": {
     "node": ">=0.10.0"
